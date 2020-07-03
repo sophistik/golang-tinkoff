@@ -1,0 +1,118 @@
+{{define "robot_table"}}
+    <script type="text/javascript">
+        function WebSocketPrice() {
+            if ("WebSocket" in window) {
+                var ws = new WebSocket("ws://127.0.0.1:8000/api/v1/robot/robots_ws");
+
+                ws.onopen = function () {
+                    console.log("WS is opened");
+                };
+
+                ws.onmessage = function (evt) {
+                    let msg = JSON.parse(evt.data);
+                    var table = document.getElementById("RobotsTable");
+                    var v = document.getElementById("row_" + msg["robot_id"]);
+                    v.innerHTML = `
+                    <th scope="row">${msg["robot_id"]}</th>
+                    <td>${msg["owner_user_id"]}</td>
+                    <td>${msg["parent_robot_id"]}</td>
+                    <td>${msg["is_favorite"]}</td>
+                    <td>${msg["is_active"]}</td>
+                    <td>${msg["ticker"]} </td>
+                    <td>${msg["buy_price"]}</td>
+                    <td>${msg["sell_price"]}</td>
+                    <td>${msg["plan_start"]}</td>
+                    <td>${msg["plan_end"]}</td>
+                    <td>${msg["plan_yield"]}</td>
+                    <td>${msg["fact_yield"]}</td>
+                    <td>${msg["deals_count"]}</td>
+                    <td>${msg["activated_at"]}</td>
+                    <td>${msg["deactivated_at"]}</td>
+                    <td>${msg["created_at"]}</td>
+                    <td><a class="btn btn-primary" href="/api/v1/robot/${msg["robot_id"]}" role="button">Подробнее</a></td>
+                `;
+                    // row = table.insertRow(table.rows.length);
+
+
+                //     $("#row_" + msg["robot_id"]).empty();
+                //     $("#row_" + msg["robot_id"]).append(`
+                //     table.append(`
+                //     <th scope="row">${msg["robot_id"]}</th>
+                //     <td>${msg["owner_user_id"]}</td>
+                //     <td>${msg["parent_robot_id"]}</td>
+                //     <td>${msg["is_favorite"]}</td>
+                //     <td>${msg["is_active"]}</td>
+                //     <td>${msg["ticker"]} </td>
+                //     <td>${msg["buy_price"]}</td>
+                //     <td>${msg["sell_price"]}</td>
+                //     <td>${msg["plan_start"]}</td>
+                //     <td>${msg["plan_end"]}</td>
+                //     <td>${msg["plan_yield"]}</td>
+                //     <td>${msg["fact_yield"]}</td>
+                //     <td>${msg["deals_count"]}</td>
+                //     <td>${msg["activated_at"]}</td>
+                //     <td>${msg["deactivated_at"]}</td>
+                //     <td>${msg["created_at"]}</td>
+                //     <td><a class="btn btn-primary" href="/api/v1/robot/${msg["robot_id"]}" role="button">Подробнее</a></td>
+                // `);
+                };
+
+                ws.onclose = function () {
+                    console.log("WS is closed");
+                };
+            } else {
+                console.log("WebSocket is not supported in your browser");
+            }
+        }
+
+        WebSocketPrice();
+    </script>
+    <div>
+        <table id="RobotsTable" class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">ID робота</th>
+                <th scope="col">ID владельца</th>
+                <th scope="col">ID базового робота</th>
+                <th scope="col">Избранное</th>
+                <th scope="col">Активен</th>
+                <th scope="col">Тикер</th>
+                <th scope="col">Цена покупки</th>
+                <th scope="col">Цена продажи</th>
+                <th scope="col">Плановая дата запуска</th>
+                <th scope="col">Плановая дата остановки</th>
+                <th scope="col">Плановая доходность</th>
+                <th scope="col">Фактическая доходность</th>
+                <th scope="col">Количество совершенных сделок</th>
+                <th scope="col">Активирован</th>
+                <th scope="col">Деактивирован</th>
+                <th scope="col">Создан</th>
+                <th scope="col">Подробнее</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $key,$value := . }}
+                <tr id="row_{{$value.RobotID}}">
+                    <th scope="row">{{$value.RobotID}}</th>
+                    <td>{{$value.OwnerUserID}}</td>
+                    <td>{{if $value.ParentRobotID}} {{$value.ParentRobotID}} {{end}}</td>
+                    <td>{{$value.IsFavorite}}</td>
+                    <td>{{$value.IsActive}}</td>
+                    <td>{{$value.Ticker}}</td>
+                    <td>{{$value.BuyPrice}}</td>
+                    <td>{{$value.SellPrice}}</td>
+                    <td>{{$value.PlanStart}}</td>
+                    <td>{{$value.PlanEnd}}</td>
+                    <td>{{$value.PlanYield}}</td>
+                    <td>{{$value.FactYield}}</td>
+                    <td>{{$value.DealsCount}}</td>
+                    <td>{{$value.ActivatedAt}}</td>
+                    <td>{{$value.DeactivatedAt}}</td>
+                    <td>{{$value.CreatedAt}}</td>
+                    <td><a class="btn btn-primary" href="/api/v1/robot/{{$value.RobotID}}" role="button">Подробнее</a></td>
+                </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+{{end}}

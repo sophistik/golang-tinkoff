@@ -1,0 +1,10 @@
+{{define "head"}}Список роботов{{end}}
+{{define "body"}}
+    <h1>Роботы</h1>
+    <form method="get" action="?">
+        <p>User ID:<br> <input type="number" value="{{.OwnerUserID}}" name="owner_user_id"></p>
+        <p>Ticker:<br> <input type="string" value="{{.Ticker}}" name="ticker"></p>
+        <p><input type="submit" value="submit"/></p>
+    </form>
+    {{template "robot_table" .Robots}}
+{{end}}

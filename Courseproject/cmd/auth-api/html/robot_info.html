@@ -1,0 +1,58 @@
+{{define "head"}}Описание робота{{end}}
+{{define "body"}}
+    <script type="text/javascript">
+        function WebSocketPrice() {
+            if ("WebSocket" in window) {
+                var ws = new WebSocket("ws://127.0.0.1:8000/api/v1/robot/robots_ws");
+
+                ws.onopen = function () {
+                    console.log("WS is opened");
+                };
+
+                ws.onmessage = function (evt) {
+                    let msg = JSON.parse(evt.data);
+                    document.getElementById("owner_user_id").innerHTML = `ID владельца: ${msg["owner_user_id"]}`;
+                    document.getElementById("parent_robot_id").innerHTML = `Базовый робот: ${msg["parent_robot_id"]}`;
+                    document.getElementById("is_favorite").innerHTML = `Избранное: ${msg["is_favorite"]}`;
+                    document.getElementById("is_active").innerHTML = `Активен: ${msg["is_active"]}`;
+                    document.getElementById("ticker").innerHTML = `Тикер: ${msg["ticker"]}`;
+                    document.getElementById("buy_price").innerHTML = `Цена покупки: ${msg["buy_price"]}`;
+                    document.getElementById("sell_price").innerHTML = `Цена продажи: ${msg["sell_price"]}`;
+                    document.getElementById("plan_start").innerHTML = `Плановая дата запуска: ${msg["plan_start"]}`;
+                    document.getElementById("plan_end").innerHTML = `Плановая дата окончания: ${msg["plan_end"]}`;
+                    document.getElementById("plan_yield").innerHTML = `Плановая доходность: ${msg["plan_yield"]}`;
+                    document.getElementById("fact_yield").innerHTML = `Фактическая доходность: ${msg["fact_yield"]}`;
+                    document.getElementById("deals_count").innerHTML = `Количество сделок: ${msg["deals_count"]}`;
+                    document.getElementById("activated_at").innerHTML = `Активирован: ${msg["activated_at"]}`;
+                    document.getElementById("deactivated_at").innerHTML = `Деактивирован: ${msg["deactivated_at"]}`;
+                    document.getElementById("created_at").innerHTML = `Создан: ${msg["created_at"]}`;
+                };
+
+                ws.onclose = function () {
+                    console.log("WS is closed");
+                };
+            } else {
+                console.log("WebSocket is not supported in your browser");
+            }
+        }
+
+        WebSocketPrice();
+    </script>
+    <button type="button" class="btn btn-primary" onclick="window.history.back();">Назад</button>
+    <h1 id="title">Робот {{.RobotID}}</h1>
+    <p id="owner_user_id">ID владельца: {{.OwnerUserID}}</p>
+    <p id="parent_robot_id">{{if .ParentRobotID}} {{.ParentRobotID}}{{else}} Нет базового робота{{end}}</p>
+    <p id="is_favorite">Избранное: {{.IsFavorite}}</p>
+    <p id="is_active">Активен: {{.IsActive}}</p>
+    <p id="ticker">Тикер: {{.Ticker}}</p>
+    <p id="buy_price">Цена покупки: {{.BuyPrice}}</p>
+    <p id="sell_price">Цена продажи:{{.SellPrice}}</p>
+    <p id="plan_start">Плановая дата запуска: {{.PlanStart}}</p>
+    <p id="plan_end">Плановая дата окончания: {{.PlanEnd}}</p>
+    <p id="plan_yield">Плановая доходность: {{.PlanYield}}</p>
+    <p id="fact_yield">Фактическая доходность: {{.FactYield}}</p>
+    <p id="deals_count">Количество сделок: {{.DealsCount}}</p>
+    <p id="activated_at">Активирован: {{.ActivatedAt}}</p>
+    <p id="deactivated_at">Деактивирован: {{.DeactivatedAt}}</p>
+    <p id="created_at">Создан: {{.CreatedAt}}</p>
+{{end}}

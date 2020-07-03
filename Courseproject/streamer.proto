@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package fintech;
+
+option go_package = "internal/streamer;fintech";
+
+import "google/protobuf/timestamp.proto";
+
+message PriceRequest {
+    string ticker = 1;
+}
+
+message PriceResponse {
+    double buy_price = 1;
+    double sell_price = 2;
+    google.protobuf.Timestamp ts = 3;
+}
+
+service TradingService {
+    rpc Price (PriceRequest) returns (stream PriceResponse);
+}
